@@ -6128,9 +6128,10 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
 
 
 async def MaiiiinE():
+    # --- CREDENTIALS ---
     Uid , Pw = '4448324207','glory_GEA2D_BY_KRSXH_NVRDIE_9IZ89'
     
-
+    # --- LOGIN PROCESS ---
     open_id , access_token = await GeNeRaTeAccEss(Uid , Pw)
     if not open_id or not access_token: print("ErroR - InvaLid AccounT") ; return None
     
@@ -6140,14 +6141,13 @@ async def MaiiiinE():
     
     MajoRLoGinauTh = await DecRypTMajoRLoGin(MajoRLoGinResPonsE)
     UrL = MajoRLoGinauTh.url
-    # In the MaiiiinE function, find and comment out these print statements:
+    
     os.system('clear')
     print("🔄 Starting TCP Connections...")
     print("📡 Connecting to Free Fire servers...")
     print("🌐 Server connection established")
 
     region = MajoRLoGinauTh.region
-
     ToKen = MajoRLoGinauTh.token
     print("🔐 Authentication successful")
     TarGeT = MajoRLoGinauTh.account_uid
@@ -6157,18 +6157,19 @@ async def MaiiiinE():
     
     LoGinDaTa = await GetLoginData(UrL , PyL , ToKen)
     if not LoGinDaTa: print("ErroR - GeTinG PorTs From LoGin DaTa !") ; return None
+    
     LoGinDaTaUncRypTinG = await DecRypTLoGinDaTa(LoGinDaTa)
     OnLinePorTs = LoGinDaTaUncRypTinG.Online_IP_Port
     ChaTPorTs = LoGinDaTaUncRypTinG.AccountIP_Port
     OnLineiP , OnLineporT = OnLinePorTs.split(":")
     ChaTiP , ChaTporT = ChaTPorTs.split(":")
     acc_name = LoGinDaTaUncRypTinG.AccountName
-    #print(acc_name)
     
     equie_emote(ToKen,UrL)
     AutHToKen = await xAuThSTarTuP(int(TarGeT) , ToKen , int(timestamp) , key , iv)
     ready_event = asyncio.Event()
     
+    # --- START TASKS ---
     task1 = asyncio.create_task(TcPChaT(ChaTiP, ChaTporT , AutHToKen , key , iv , LoGinDaTaUncRypTinG , ready_event ,region))
     task2 = asyncio.create_task(TcPOnLine(OnLineiP , OnLineporT , key , iv , AutHToKen))  
 
@@ -6179,57 +6180,50 @@ async def MaiiiinE():
     print("└────────────────────────────────────┘")
     time.sleep(0.5)
     os.system('clear')
-    print("Connecting to Free Fire servers...")
-    print("┌────────────────────────────────────┐")
-    print("│ ██████████████████████░░░░░░░░░░░░ │")
-    print("└────────────────────────────────────┘")
-    time.sleep(0.5)
-    os.system('clear')
-
+    
     print("🤖 FLASH FF BOT - ONLINE")
-    print("┌────────────────────────────────────┐")
-    print("│ ██████████████████████████████████ │")
-    print("└────────────────────────────────────┘")
     print(f"🔹 UID: {TarGeT}")
     print(f"🔹 Name: {acc_name}")
     print(f"🔹 Status: 🟢 READY")
     print("")
     print("💡 Type /help for commands")
-    await asyncio.gather(task1, task2)
-    time.sleep(0.5)
-    os.system('clear')
-    await ready_event.wait()
-    await asyncio.sleep(1)
-
-    os.system('clear')
-    print(render('MG24 GAMERs', colors=['white', 'green'], align='center'))
-    print('')
-    print("🤖 FLASH FF BOT - ONLINE")
-    print(f"🔹 UID: {TarGeT}")
-    print(f"🔹 Name: {acc_name}")
-    print(f"🔹 Status: 🟢 READY")
     
+    # Wait for tasks
+    await asyncio.gather(task1, task2)
 
+# --- MISSING STARTING FUNCTION ADDED HERE ---
+async def StarTinG():
+    while True:
+        try:
+            # Run the main bot logic
+            await MaiiiinE()
+        except KeyboardInterrupt:
+            print("\n\n🛑 Bot shutdown by user")
+            break
+        except Exception as e:
+            print(f"⚠️ Critical Error in Main Loop: {e}")
+            print("🔄 Restarting bot in 5 seconds...")
+            await asyncio.sleep(5)
 
+# --- CLEAN EXIT HANDLER ---
 def handle_keyboard_interrupt(signum, frame):
     """Clean handling for Ctrl+C"""
     print("\n\n🛑 Bot shutdown requested...")
     print("👋 Thanks for using FLASH FF")
     sys.exit(0)
-    
-# ... (rest of your code above) ...
 
 # Register the signal handler
 signal.signal(signal.SIGINT, handle_keyboard_interrupt)
 
-# --- CORRECT STARTUP BLOCK ---
+# --- MAIN EXECUTION BLOCK ---
 if __name__ == '__main__':
-    # 1. Start the fake web server to keep Render happy
-    keep_alive()
+    # 1. Start the fake web server to keep Render happy (Must be at the top of main.py too)
+    try:
+        keep_alive()
+    except Exception as e:
+        print(f"⚠️ Web server failed to start (ignore if local): {e}")
     
-    # 2. (Optional) If you need the Insta API, run it in a thread. 
-    # NOTE: On Render Free Tier, this API won't be accessible from the outside 
-    # because only the 'keep_alive' port is exposed. You can keep it if it's for internal use.
+    # 2. Start Insta API in background
     threading.Thread(target=start_insta_api, daemon=True).start()
     
     # 3. Start the Main Bot Loop
